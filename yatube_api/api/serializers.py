@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
 
-from posts.models import Comment, Post
+from posts.models import Comment, Post, Follow, Group
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -21,3 +21,15 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Comment
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = 'following'
+        model = Follow
+
+
+class GroupSerializers(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Group
