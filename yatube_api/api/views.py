@@ -35,9 +35,12 @@ class CommentViewSet(viewsets.ModelViewSet):
         post = get_post(self)
         serializer.save(post=post, author=self.request.user)
 
-    
 
-class FollowViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class FollowViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated, )
