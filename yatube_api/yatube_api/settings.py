@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -54,6 +55,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "yatube_api.wsgi.application"
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DATABASES = {
     "default": {
