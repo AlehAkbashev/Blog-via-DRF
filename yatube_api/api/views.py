@@ -1,17 +1,13 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, mixins, permissions, serializers, viewsets
+from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
-from posts.models import Comment, Follow, Group, Post, User
+from posts.models import Group, Post, User
 
 from .permissions import AccessPermission
-from .serializers import (
-    CommentSerializer,
-    FollowSerializer,
-    GroupSerializers,
-    PostSerializer,
-)
+from .serializers import (CommentSerializer, FollowSerializer,
+                          GroupSerializers, PostSerializer)
 
 
 def get_post(self, model: models.Model = Post, key: str = "post_id"):
@@ -36,7 +32,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (
         AccessPermission,
@@ -59,7 +54,6 @@ class CommentViewSet(viewsets.ModelViewSet):
 class FollowViewSet(
     mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
-    queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
@@ -68,10 +62,7 @@ class FollowViewSet(
     def perform_create(self, serializer):
         following_name = self.request.data.get("following")
         following_user = get_object_or_404(User, username=following_name)
-        if following_user == self.request.user:
-            raise serializers.ValidationError(
-                {"error": "Нельзя подписаться на самого себя"}
-            )
+        serializer.is_valid()
         serializer.save(user=self.request.user, following=following_user)
 
     def get_queryset(self):
